@@ -67,7 +67,7 @@ void master_state::expire(data& key) {
   } else if (!*result) {
     BROKER_WARNING("ignoring stale expiration reminder");
   } else {
-    erase_command cmd{std::move(key), publisher_id{self->node(), self->id()}};
+    erase_command cmd{std::move(key), entity_id{self->node(), self->id()}};
     emit_erase_event(cmd);
     broadcast_cmd_to_clones(std::move(cmd));
   }

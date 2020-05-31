@@ -8,7 +8,7 @@ namespace {
 
 template <class T>
 constexpr size_t vec_slots() {
-  if constexpr (std::is_same<T, publisher_id>::value)
+  if constexpr (std::is_same<T, entity_id>::value)
     return 2;
   else
     return 1;
@@ -27,7 +27,7 @@ void append(vector& xs, const optional<T>& x) {
     xs.emplace_back(nil);
 }
 
-void append(vector& xs, const publisher_id& x) {
+void append(vector& xs, const entity_id& x) {
   if (x) {
     if (auto ep = to<data>(x.endpoint)) {
       xs.emplace_back(std::move(*ep));
@@ -60,7 +60,7 @@ void store_actor_state::init(caf::event_based_actor* self,
 
 void store_actor_state::emit_insert_event(const data& key, const data& value,
                                           const optional<timespan>& expiry,
-                                          const publisher_id& publisher) {
+                                          const entity_id& publisher) {
   vector xs;
   fill_vector(xs, "insert"s, key, value, expiry, publisher);
   self->send(core, atom::publish_v, atom::local_v,
@@ -71,7 +71,7 @@ void store_actor_state::emit_update_event(const data& key,
                                           const data& old_value,
                                           const data& new_value,
                                           const optional<timespan>& expiry,
-                                          const publisher_id& publisher) {
+                                          const entity_id& publisher) {
   vector xs;
   fill_vector(xs, "update"s, key, old_value, new_value, expiry, publisher);
   self->send(core, atom::publish_v, atom::local_v,
@@ -79,7 +79,7 @@ void store_actor_state::emit_update_event(const data& key,
 }
 
 void store_actor_state::emit_erase_event(const data& key,
-                                         const publisher_id& publisher) {
+                                         const entity_id& publisher) {
   vector xs;
   fill_vector(xs, "erase"s, key, publisher);
   self->send(core, atom::publish_v, atom::local_v,

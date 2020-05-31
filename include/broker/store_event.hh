@@ -5,7 +5,7 @@
 
 #include "broker/convert.hh"
 #include "broker/data.hh"
-#include "broker/publisher_id.hh"
+#include "broker/entity_id.hh"
 
 namespace broker {
 
@@ -33,7 +33,7 @@ public:
   /// ```
   ///
   /// Whereas the `publisher_endpoint` and the `publisher_object` encode a
-  /// @ref publisher_id.
+  /// @ref entity_id.
   class insert {
   public:
     insert(const insert&) noexcept = default;
@@ -66,7 +66,7 @@ public:
       return nil;
     }
 
-    publisher_id publisher() const noexcept {
+    entity_id publisher() const noexcept {
       if (auto value = to<caf::node_id>((*xs_)[4])) {
         return {std::move(*value), get<uint64_t>((*xs_)[5])};
       }
@@ -120,7 +120,7 @@ public:
       return nil;
     }
 
-    publisher_id publisher() const noexcept {
+    entity_id publisher() const noexcept {
       if (auto value = to<caf::node_id>((*xs_)[5])) {
         return {*value, get<uint64_t>((*xs_)[6])};
       }
@@ -159,7 +159,7 @@ public:
       return (*xs_)[1];
     }
 
-    publisher_id publisher() const noexcept {
+    entity_id publisher() const noexcept {
       if (auto value = to<caf::node_id>((*xs_)[2])) {
         return {*value, get<uint64_t>((*xs_)[3])};
       }
